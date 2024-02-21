@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.RamseteController;
@@ -45,6 +48,8 @@ public class RobotContainer {
   public Pigeon2Handler pigeon = new Pigeon2Handler();
   public SwerveDriveSubsystem swerveDrive = new SwerveDriveSubsystem(pigeon);
   public static double slowmult = 1;
+  private final SendableChooser<Command> autoChooser;
+
 
   public double getDriveJoy(int axis){
     double raw = driveJoy.getRawAxis(axis);
@@ -79,7 +84,6 @@ public class RobotContainer {
 
   public Trajectory trajectory;
   public Command m_autonomousCommand;
-  public SendableChooser<String> autoChooser = new SendableChooser<String>();
 
 
 
@@ -87,9 +91,11 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-
-    
     joySticks.driveButton(1).onTrue(new InstantCommand(()->pigeon.zeroYaw()));
+    autoChooser = AutoBuilder.buildAutoChooser();
+
+  
+
   }
 
   
@@ -133,37 +139,42 @@ double R = Math.sqrt(.5);
     return output;
    }
 
-   public Command pathFollow(String trajectoryJSON, boolean multiPath){
-
-     double kPXControl = 1; //change
-    double kPYControl = 1; //change
-    ProfiledPIDController thetaController = new ProfiledPIDController(Constants.K_P, 0, 0, Constants.K_THETA);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-
-    try {
-      Path testTrajectory = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-      trajectory = TrajectoryUtil.fromPathweaverJson(testTrajectory);
-    } catch (final IOException ex) {
-  
-  
-      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-    }
-    //m_drivebase.m_gyro.reset();
-
-    Consumer<SwerveModuleState[]> moduleStateConsumer = (states) -> swerveDrive.setSwerveModuleStates(states);
-
-    
-
-    
-    // Run path following command, then stop at the end.
-    // Robot.m_robotContainer.m_driveAuto.m_drive.feed();
-    //m_drivebase.resetOdometry(trajectory.getInitialPose());
-    
-    if (!multiPath){
-      swerveDrive.resetPose();
-    } 
+  public Command getAutonomousCommand() {
+    return autoChooser.getSelected();
   }
+
+
+  //  public Command pathFollow(String trajectoryJSON, boolean multiPath){
+
+  //    double kPXControl = 1; //change
+  //   double kPYControl = 1; //change
+  //   ProfiledPIDController thetaController = new ProfiledPIDController(Constants.K_P, 0, 0, Constants.K_THETA);
+  //   thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+
+  //   try {
+  //     Path testTrajectory = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+  //     trajectory = TrajectoryUtil.fromPathweaverJson(testTrajectory);
+  //   } catch (final IOException ex) {
+  
+  
+  //     DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+  //   }
+  //   //m_drivebase.m_gyro.reset();
+
+  //   Consumer<SwerveModuleState[]> moduleStateConsumer = (states) -> swerveDrive.setSwerveModuleStates(states);
+
+    
+
+    
+  //   // Run path following command, then stop at the end.
+  //   // Robot.m_robotContainer.m_driveAuto.m_drive.feed();
+  //   //m_drivebase.resetOdometry(trajectory.getInitialPose());
+    
+  //   if (!multiPath){
+  //     swerveDrive.resetPose();
+  //   } 
+  // }
 
 
 
