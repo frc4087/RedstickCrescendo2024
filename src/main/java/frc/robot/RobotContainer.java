@@ -93,35 +93,25 @@ public class RobotContainer {
   }
 
   
-double MAX_RATE = 5.5; // m/s
+double MAX_RATE = 5.5; // m/s TODO: Drag race the robot
 double R = Math.sqrt(.5);
   public void teleopPeriodic(){
-    double speedRate = SmartDashboard.getNumber("SpeedRate", 0.3)* MAX_RATE;
+    double speedRate = SmartDashboard.getNumber("SpeedRate", 0.3)* MAX_RATE; //push controller to 1 -> Max speed (MAX_RATE).
     double turnRate = SmartDashboard.getNumber("TurnRate", 1)* MAX_RATE/R;
     SmartDashboard.putNumber("Front Right", swerveDrive.frontRight.getPosition());
     SmartDashboard.putNumber("Front Left", swerveDrive.frontLeft.getPosition());
     SmartDashboard.putNumber("Back Right", swerveDrive.backRight.getPosition());
     SmartDashboard.putNumber("Back Left", swerveDrive.backLeft.getPosition());
 
-
-
-
-   
-
     //SmartDashboard.putNumber("driveJoyXR", getDriveJoyXR()
     SmartDashboard.putNumber("drivejoyYL", getDriveJoyYL());
 
-    double xval = getDriveJoyXR()*speedRate; // TODO: CHECK AXIS
-    double yval = -getDriveJoyYR()*speedRate;
-    double spinval = getDriveJoyXL() * turnRate;
-
-   
+    double xval = getDriveJoyXR()*speedRate; // m/s
+    double yval = -getDriveJoyYR()*speedRate;// m/s
+    double spinval = getDriveJoyXL() * turnRate; // rad/s
 
     //  swerveDrive.drive(new ChassisSpeeds(xval, yval, spinval));
     swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xval, yval, spinval, pigeon.getAngleDeg()));
-
-  
-
     
   }
 
@@ -163,16 +153,6 @@ double R = Math.sqrt(.5);
 
     Consumer<SwerveModuleState[]> moduleStateConsumer = (states) -> swerveDrive.setSwerveModuleStates(states);
 
-    SwerveControllerCommand swerveController = new SwerveControllerCommand(
-    trajectory,
-    swerveDrive.getRobotPoseSupplier(), 
-    swerveDrive.getKinematics(),
-    new PIDController(kPXControl, 0, 0),
-    new PIDController(kPYControl, 0, 0),
-    thetaController,
-    moduleStateConsumer,
-    swerveDrive);
-
     
 
     
@@ -183,7 +163,6 @@ double R = Math.sqrt(.5);
     if (!multiPath){
       swerveDrive.resetPose();
     } 
-    return swerveController;
   }
 
 

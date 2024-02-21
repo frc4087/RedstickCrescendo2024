@@ -23,15 +23,21 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class SwerveWheelModuleSubsystem extends SubsystemBase {
-  double P = 0.00675;//0.000072;//0.000081;
-  double I = 0.00001;//0.000007;
-  double D = 0;//0.0000065;
+  double TURN_P = 0.00675;//0.000072;//0.000081;
+  double TURN_I = 0.00001;//0.000007;
+  double TURN_D = 0;//0.0000065;
+
+  double SPEED_P = 1; //TODO: TUNE Velocity PID Controller     (currentVal, Target value) ex:(0m/s, 5m/s) 
+  double SPEED_I = 0;
+  double SPEED_D = 0;
+
   double GEAR_RATIO = 2;
   //hard code in the actual values once we find them off of smartdashboard
 
   private CANSparkMax angleMotor;
   private CANSparkMax speedMotor;
-  private PIDController pidController;
+  private PIDController turnPIDController;
+  private PIDController speedPIDController;
   //private CANCoder angleEncoder;
   private CANcoder angleEncoder;
   //private boolean calibrateMode;
@@ -47,7 +53,8 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
       this.angleEncoder = new CANcoder(angleEncoderChannel); // CANCoder Encoder //TODO: CHECK THIS RANGE IS 0-360
       this.speedMotor.setIdleMode(IdleMode.kCoast);
       this.motorName = motorName;
-      this.pidController = new PIDController(P, I, D); // This is the PID constant,
+      this.turnPIDController = new PIDController(TURN_P, TURN_I, TURN_D); // This is the PID constant,
+      this.speedPIDController = new PIDController(SPEED_P,SPEED_I,SPEED_D);
       // we're not using any
       // Integral/Derivative control but increasing the P value will make
       // the motors more aggressive to changing to angles.
@@ -58,7 +65,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
       // pidController.setTolerance(20); //sets tolerance, shouldn't be needed.
 
-      pidController.enableContinuousInput(0, 360); // This makes the PID controller
+      turnPIDController.enableContinuousInput(0, 360); // This makes the PID controller
       // understand the fact that for
       // our setup, 360 degrees is the same as 0 since the wheel loops.
 
@@ -86,7 +93,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
       
       
-      double pidOut = -pidController.calculate(currentEncoderValue, angle);
+      double pidOut = -turnPIDController.calculate(currentEncoderValue, angle);
     
       
       angleMotor.set(pidOut);
@@ -95,9 +102,9 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
       
   }
 
-  public void setSpeed(double speed)
+  public void setSpeed(double speedMetersPerSecond)
   {
-      speedMotor.set(speed/5.5);
+      speedPIDController.setSetpoint(speedMetersPerSecond);
   }
 
   
@@ -153,12 +160,17 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
       //calibrateMode = calibrateState.getEntry().getBoolean(false);
-      P = SmartDashboard.getNumber("P", P);
-      I = SmartDashboard.getNumber("I", I);
-      D = SmartDashboard.getNumber("D", D);
-      pidController.setPID(P, I, D);
-    
-      SmartDashboard.putNumber("Encoder " + motorName, getPosition());
+
+      // update values on the fly, uncomment when tuning
+      // TURN_P = SmartDashboard.getNumber("P", TURN_P);
+      // TURN_I = SmartDashboard.getNumber("I", TURN_I);
+      // TURN_D = SmartDashboard.getNumber("D", TURN_D);
+      // turnPIDController.setPID(TURN_P, TURN_I, TURN_D);
+      // SmartDashboard.putNumber("Encoder " + motorName, getPosition());
+
+    double speedThrottleValue = speedPIDController.calculate(getSpeedMotorSpeed());
+    speedMotor.set(speedThrottleValue);
+
 
   }
 
