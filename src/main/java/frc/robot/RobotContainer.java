@@ -63,23 +63,26 @@ public class RobotContainer {
 
   public double getDriveJoyXR(){
     double raw = getDriveJoy(4);
-    return raw; 
+    return Math.abs(raw) < 0.1 ? 0.0 : raw; 
+ 
   }
 
 
   public double getDriveJoyXL(){
     double raw = getDriveJoy(0); //Verify axis
-    return raw; 
+    return Math.abs(raw) < 0.1 ? 0.0 : raw; 
   }
 
   public double getDriveJoyYL(){
     double raw = getDriveJoy(1);
-    return raw; 
+    return Math.abs(raw) < 0.1 ? 0.0 : raw; 
+ 
   }
 
   public double getDriveJoyYR(){
     double raw = getDriveJoy(5);
-    return raw;
+    return Math.abs(raw) < 0.1 ? 0.0 : raw; 
+
   }
 
   public Trajectory trajectory;
