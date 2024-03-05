@@ -80,13 +80,13 @@ public class RobotContainer {
       }));
 
      joyStick.opButton(2)
-    .onTrue(new InstantCommand(()->arm.setGoal(60)));
+    .onTrue(new InstantCommand(()->arm.setGoal(-60)));
 
     joyStick.opButton(3)
-    .onTrue(new InstantCommand(()->arm.setGoal(80)));
+    .onTrue(new InstantCommand(()->arm.setGoal(-80)));
 
     joyStick.opButton(4)
-    .onTrue(new InstantCommand(()->arm.setGoal(90)));
+    .onTrue(new InstantCommand(()->arm.setGoal(-90)));
 
 
   }

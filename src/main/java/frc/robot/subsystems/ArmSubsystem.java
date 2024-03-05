@@ -6,9 +6,11 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -20,7 +22,8 @@ public class ArmSubsystem extends ProfiledPIDSubsystem {
   public final CANSparkMax m_spark2 = new CANSparkMax(12, MotorType.kBrushless);
   //public final RelativeEncoder encoder_arm = m_spark.getAlternateEncoder();
   //public final CANSparkMax hand_spark = new CANSparkMax(21,MotorType.kBrushless);
-  public final RelativeEncoder alternateEncoder;
+  public final SparkAbsoluteEncoder alternateEncoder;
+  public final ArmFeedforward ff = new ArmFeedforward(0, 0.03, 0, 0);
   //public final DutyCycleEncoder dutyCycleEncoder;
   //private final double ENCODER_OFFSET = -1.416992;
   //encoder_arm.setDistancePerPulse(1.0 / 360.0 * 2.0 * Math.PI * 1.5);
@@ -43,12 +46,13 @@ public class ArmSubsystem extends ProfiledPIDSubsystem {
             0,
             // The motion profile constraints
             new TrapezoidProfile.Constraints(200, 200)));
-    this.alternateEncoder = m_spark.getAlternateEncoder(8192);
-
+    this.alternateEncoder = m_spark.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
 
   
     m_spark.setIdleMode(IdleMode.kBrake);
     m_spark2.setIdleMode(IdleMode.kBrake);
+    m_spark.setSmartCurrentLimit(40);
+    m_spark2.setSmartCurrentLimit(40);
     
     m_spark2.follow(m_spark,true);
 
@@ -59,9 +63,10 @@ public class ArmSubsystem extends ProfiledPIDSubsystem {
   public void useOutput(double output, TrapezoidProfile.State setpoint) {
     // Use the output (and optionally the setpoint) here
       // double invertedOutput = output * -1;
+    double feedforward = ff.calculate(setpoint.position, setpoint.velocity);
   SmartDashboard.putNumber("Arm Output", output);
   // SmartDashboard.putNumber("Inverted Arm Output", invertedOutput);
-   m_spark.set(output);
+   m_spark.set(output + feedforward);
    //m_spark2.set(output);
  
   // hand_spark.set(output);
@@ -73,7 +78,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem {
 
    public double getArmEncoderPos(){ // arm deg
 
-   return (-alternateEncoder.getPosition())*12/52*360; //Put encoder offset back in 
+   return (-alternateEncoder.getPosition()*360); //Put encoder offset back in 
 
  }
 
