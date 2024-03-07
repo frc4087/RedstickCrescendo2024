@@ -24,9 +24,9 @@ public class Arm2 extends ProfiledPIDSubsystem {
     super(
         // The ProfiledPIDController used by the subsystem
         new ProfiledPIDController(
-            0.03,
-            0.0,
-            0.001,
+            0.022,
+            0.0005,
+            0,
             // The motion profile constraints
             new TrapezoidProfile.Constraints(200, 200)));
 

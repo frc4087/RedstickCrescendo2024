@@ -112,13 +112,12 @@ public Trajectory trajectory;
 
    // SmartDashboard.putNumber("voltage", arm.getVoltage());
 
-    joyStick.opButton(1)
-    .onTrue(new InstantCommand(()->{
+    //Arm Code 
+    joyStick.opButton(1).onTrue(new InstantCommand(()->{
       arm.enable();
       arm.setGoal(5);
     }));
     
-    //arm code go here
      joyStick.opButton(2)
     .onTrue(new InstantCommand(()->arm.setGoal(60)));
   
@@ -126,6 +125,9 @@ public Trajectory trajectory;
     .onTrue(new InstantCommand(()->arm.setGoal(30)));
 
     flightSensor.setRangeOfInterest(8, 8, 12, 12);
+
+
+    //Launcher Buttons 
 
     joyStick.opButton(5).onTrue(new InstantCommand(()->intake()));
 
