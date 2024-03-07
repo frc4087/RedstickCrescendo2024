@@ -119,10 +119,10 @@ public Trajectory trajectory;
     }));
     
      joyStick.opButton(2)
-    .onTrue(new InstantCommand(()->arm.setGoal(60)));
+    .onTrue(new InstantCommand(()->arm.setGoal(100)));
   
     joyStick.opButton(3)
-    .onTrue(new InstantCommand(()->arm.setGoal(30)));
+    .onTrue(new InstantCommand(()->arm.setGoal(0)));
 
     flightSensor.setRangeOfInterest(8, 8, 12, 12);
 
