@@ -60,8 +60,8 @@ public class RobotContainer {
   public JoystickContainer joyStick = new JoystickContainer(driveJoy,opJoy);
   //public ArmSubsystem arm = new ArmSubsystem();
   public Arm2 arm = new Arm2();
-  // public Pigeon2Handler pigeon = new Pigeon2Handler();
-  // public SwerveDriveSubsystem swerveDrive = new SwerveDriveSubsystem(pigeon);
+  public Pigeon2Handler pigeon = new Pigeon2Handler();
+  public SwerveDriveSubsystem swerveDrive = new SwerveDriveSubsystem(pigeon);
   public static double slowmult = 1;
   public TimeOfFlight flightSensor = new TimeOfFlight(40);
   public CANSparkMax rightLaunch = new CANSparkMax(30,MotorType.kBrushless);
@@ -124,18 +124,19 @@ public Trajectory trajectory;
   
     joyStick.opButton(3)
     .onTrue(new InstantCommand(()->arm.setGoal(30)));
+
     flightSensor.setRangeOfInterest(8, 8, 12, 12);
 
-    joyStick.opButton(2).onTrue(new InstantCommand(()->intake()));
+    joyStick.opButton(5).onTrue(new InstantCommand(()->intake()));
 
-    joyStick.opButton(1).onTrue(new ParallelRaceGroup(new setSame(), new WaitCommand(0.8).
+    joyStick.opButton(6).onTrue(new ParallelRaceGroup(new setSame(), new WaitCommand(0.8).
     andThen(new ParallelRaceGroup(new intakeShoot(), new WaitCommand(0.5).
     andThen(new ParallelRaceGroup(new off(), new WaitCommand(0.3)))))));
 
     // joyStick.opButton(4)
     // .onTrue(new InstantCommand(()->arm.setGoal(90)));
 
-    joyStick.opButton(2).onFalse(new InstantCommand(()->intakeoff()));
+    joyStick.opButton(5).onFalse(new InstantCommand(()->intakeoff()));
    // joySticks.opButton(1).onFalse(new InstantCommand(()->shootOff()));
   
 
@@ -176,8 +177,8 @@ public void shootOff(){
 }
 
 public void teleopPeriodic(){
-  double speedRate = SmartDashboard.getNumber("SpeedRate", 0.3)* MAX_RATE;
-  double turnRate = SmartDashboard.getNumber("TurnRate", 1)* MAX_RATE/R;
+  double speedRate = SmartDashboard.getNumber("SpeedRate", 0.1)* MAX_RATE;
+  double turnRate = SmartDashboard.getNumber("TurnRate", .2)* MAX_RATE/R;
    double intake = -4.5;
     double subwoofer = 0;
     double amp = 99;
@@ -216,7 +217,7 @@ public void teleopPeriodic(){
 
 
     //  swerveDrive.drive(new ChassisSpeeds(xval, yval, spinval));
-  //swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xval, yval, spinval, pigeon.getAngleDeg()));
+  swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xval, yval, spinval, pigeon.getAngleDeg()));
 
   
 
