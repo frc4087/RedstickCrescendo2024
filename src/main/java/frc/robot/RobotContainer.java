@@ -211,9 +211,9 @@ public void teleopPeriodic(){
 
   SmartDashboard.putNumber("drivejoyYL", getDriveJoyYL());
 
-  double xval = getDriveJoyXR()*speedRate; // TODO: CHECK AXIS
-  double yval = -getDriveJoyYR()*speedRate;
-  double spinval = getDriveJoyXL() * turnRate;
+  double xval = getDriveJoy(4)*speedRate; // TODO: CHECK AXIS
+  double yval = -getDriveJoy(5)*speedRate;
+  double spinval = getDriveJoy(0) * turnRate;
 
 
     //  swerveDrive.drive(new ChassisSpeeds(xval, yval, spinval));
