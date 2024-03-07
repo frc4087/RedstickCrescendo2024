@@ -101,12 +101,15 @@ public class RobotContainer {
 
   }
 
+  public void roboInit(){
+    
+  }
   
 double MAX_RATE = 5.5; // m/s TODO: Drag race the robot
 double R = Math.sqrt(.5);
   public void teleopPeriodic(){
-    double speedRate = SmartDashboard.getNumber("SpeedRate", 0.3)* MAX_RATE; //push controller to 1 -> Max speed (MAX_RATE).
-    double turnRate = SmartDashboard.getNumber("TurnRate", 1)* MAX_RATE/R;
+    double speedRate = SmartDashboard.getNumber("SpeedRate", 0.1)* MAX_RATE; //push controller to 1 -> Max speed (MAX_RATE).
+    double turnRate = SmartDashboard.getNumber("TurnRate", 0.1)* MAX_RATE/R;
     SmartDashboard.putNumber("Front Right", swerveDrive.frontRight.getPosition());
     SmartDashboard.putNumber("Front Left", swerveDrive.frontLeft.getPosition());
     SmartDashboard.putNumber("Back Right", swerveDrive.backRight.getPosition());
