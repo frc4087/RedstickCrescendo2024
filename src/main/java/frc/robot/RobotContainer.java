@@ -95,7 +95,8 @@ public class RobotContainer {
   public RobotContainer() {
 
     joySticks.driveButton(1).onTrue(new InstantCommand(()->pigeon.zeroYaw()));
-    autoChooser = AutoBuilder.buildAutoChooser();
+    this.autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Chooser",autoChooser);
 
   
 
