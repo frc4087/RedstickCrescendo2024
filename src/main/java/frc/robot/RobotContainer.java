@@ -14,6 +14,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+//import frc.robot.commands.ChangePipeline;
+//import frc.robot.subsystems.LimeLightSubsystem;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.RamseteController;
@@ -39,9 +42,13 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.intakeShoot;
 import frc.robot.subsystems.off;
+import frc.robot.subsystems.PhotonCameras;
 import frc.robot.subsystems.setSame;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import frc.robot.subsystems.PhotonCameras;
+import frc.robot.subsystems.PoseEstimation;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -56,14 +63,23 @@ public class RobotContainer {
   public final XboxController opJoy = new XboxController(1);
   public JoystickContainer joyStick = new JoystickContainer(driveJoy,opJoy);
   public ArmSubsystem arm = new ArmSubsystem();
-  // public Pigeon2Handler pigeon = new Pigeon2Handler();
-  // public SwerveDriveSubsystem swerveDrive = new SwerveDriveSubsystem(pigeon);
+  public Pigeon2Handler pigeon = new Pigeon2Handler();
+  public SwerveDriveSubsystem swerveDrive = new SwerveDriveSubsystem(pigeon);
   public static double slowmult = 1;
   public TimeOfFlight flightSensor = new TimeOfFlight(40);
   public CANSparkMax rightLaunch = new CANSparkMax(30,MotorType.kBrushless);
   public CANSparkMax leftLaunch = new CANSparkMax(31,MotorType.kBrushless);
   public CANSparkMax intakeSpark = new CANSparkMax(32,MotorType.kBrushless);
+  public final PhotonCameras mLimelight = new PhotonCameras();
+  private final PoseEstimation mPoseEstimator = new PoseEstimation(mLimelight, swerveDrive);
 
+  
+  //public LimeLightSubsystem limeLightSubsystem;
+  //private NewAutoAim lineUpClose, lineUpMedium, lineUpFar, lineUpXtra;
+
+  // public LimeLightSubsystem getLimeLightSubsystem() {
+  //   return limeLightSubsystem;
+  // }
   
   public double getDriveJoy(int axis){
     double raw = driveJoy.getRawAxis(axis);
@@ -106,6 +122,10 @@ public Trajectory trajectory;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
+    // limeLightSubsystem = new LimeLightSubsystem(3);
+    // limeLightSubsystem.setServoAngle(35);
+    // limeLightSubsystem.setPipeline(1);
+
     flightSensor.setRangeOfInterest(8, 8, 12, 12);
 
     joyStick.opButton(2).onTrue(new InstantCommand(()->intake()));
@@ -125,9 +145,17 @@ public Trajectory trajectory;
    // joySticks.driveButton(1).onTrue(new InstantCommand(()->pigeon.zeroYaw()));
   }
 
+  public SwerveDriveSubsystem getSwerveSubsystem() {
+    return swerveDrive;
+  }
   
-  
+  public PhotonCameras getLimelight() {
+    return mLimelight;
+  }
 
+  public PoseEstimation getPoseEstimator() {
+    return mPoseEstimator;
+  }
   
 double MAX_RATE = 5.5; // m/s
 double R = Math.sqrt(.5);

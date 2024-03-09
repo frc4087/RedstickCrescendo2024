@@ -96,6 +96,39 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // implementation from Pride of the North
         speeds = chassisSpeeds;
     }
+    public void drive(double x1, double y1, double x2) {
+        double r = Math.sqrt((L * L) + (W * W));
+        double backRightSpeed;//
+        double backLeftSpeed;
+        double frontRightSpeed;
+        double frontLeftSpeed;//
+
+        double backRightAngle;
+        double backLeftAngle;
+        double frontRightAngle;
+        double frontLeftAngle;
+    
+        double a = x1 - x2 * (L / r);
+        double b = x1 + x2 * (L / r);
+        double c = y1 - x2 * (W / r);
+        double d = y1 + x2 * (W / r);
+
+        backRightSpeed = Math.sqrt((b * b) + (c * c));//
+        backLeftSpeed = Math.sqrt((a * a) + (c * c));
+        frontRightSpeed = Math.sqrt((b * b) + (d * d));
+        frontLeftSpeed = Math.sqrt((a * a) + (d * d));//
+
+        backRightAngle = Math.atan2(b, c) / Math.PI;
+        backLeftAngle = Math.atan2(a, c) / Math.PI;
+        frontRightAngle = Math.atan2(b, d) / Math.PI;
+        frontLeftAngle = Math.atan2(a, d) / Math.PI;
+        // }
+        backRight.drive(backRightSpeed, backRightAngle);
+        backLeft.drive(backLeftSpeed, backLeftAngle);
+        frontRight.drive(frontRightSpeed, frontRightAngle);
+        frontLeft.drive(frontLeftSpeed, frontLeftAngle);
+    }
+
 
     public void setSwerveModuleStates(SwerveModuleState[] states)
     {

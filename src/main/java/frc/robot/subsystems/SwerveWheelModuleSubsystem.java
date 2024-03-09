@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableRegistry;
@@ -186,7 +187,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     return new SwerveModuleState(speed,angle);
   }
 
-  public SwerveModulePosition getSwerveModulePosition(){
+  public SwerveModulePosition[] getSwerveModulePosition(){
     double position = getSpeedMotorPosition();
     Rotation2d angle =  new Rotation2d(this.getPosition());
     return new SwerveModulePosition(position,angle);
