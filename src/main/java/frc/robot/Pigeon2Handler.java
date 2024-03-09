@@ -67,7 +67,7 @@ public class Pigeon2Handler {
     }*/
 
     public void zeroYaw() {
-        pigeon.setYaw(90);
+        pigeon.setYaw(-90);
 
     }
 

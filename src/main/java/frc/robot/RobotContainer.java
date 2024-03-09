@@ -26,6 +26,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Arm2;
+import frc.robot.subsystems.Climber;
 //import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.intakeShoot;
@@ -67,16 +69,17 @@ public class RobotContainer {
   public CANSparkMax rightLaunch = new CANSparkMax(30,MotorType.kBrushless);
   public CANSparkMax leftLaunch = new CANSparkMax(31,MotorType.kBrushless);
   public CANSparkMax intakeSpark = new CANSparkMax(32,MotorType.kBrushless);
+  public Climber climb = new Climber();
 
   
   public double getDriveJoy(int axis){
     double raw = driveJoy.getRawAxis(axis);
-    return Math.abs(raw) < 0.1 ? 0.0 : raw;
+    return Math.abs(raw) < 0.2 ? 0.0 : raw;
   }
 
   public double getOpJoy(int axis){
     double raw = opJoy.getRawAxis(axis);
-    return Math.abs(raw) < 0.1 ? 0.0 : raw;
+    return Math.abs(raw) < 0.2 ? 0.0 : raw;
   }
 
   public double getDriveJoyXR(){
@@ -100,6 +103,10 @@ public class RobotContainer {
     return raw;
   }
 
+
+
+
+
 public Trajectory trajectory;
   public Command m_autonomousCommand;
   public SendableChooser<String> autoChooser = new SendableChooser<String>();
@@ -109,6 +116,14 @@ public Trajectory trajectory;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    intakeSpark.setSmartCurrentLimit(40);
+    leftLaunch.setSmartCurrentLimit(25);
+    rightLaunch.setSmartCurrentLimit(25);
+
+    swerveDrive.brake();
+    swerveDrive.currentLimit();
+
 
    // SmartDashboard.putNumber("voltage", arm.getVoltage());
 
@@ -121,31 +136,45 @@ public Trajectory trajectory;
      joyStick.opButton(2)
     .onTrue(new InstantCommand(()->arm.setGoal(100)));
   
-    joyStick.opButton(3)
-    .onTrue(new InstantCommand(()->arm.setGoal(0)));
+    // joyStick.opButton(3)
+    // .onTrue(new InstantCommand(()->arm.setGoal(0)));
+
+    
+      
+    
 
     flightSensor.setRangeOfInterest(8, 8, 12, 12);
 
 
     //Launcher Buttons 
 
-    joyStick.opButton(5).onTrue(new InstantCommand(()->intake()));
+    joyStick.opButton(5).whileTrue(new InstantCommand(()->intake()));
+    joyStick.opButton(5).whileFalse(new InstantCommand(()->intakeoff()));
 
     joyStick.opButton(6).onTrue(new ParallelRaceGroup(new setSame(), new WaitCommand(0.8).
     andThen(new ParallelRaceGroup(new intakeShoot(), new WaitCommand(0.5).
     andThen(new ParallelRaceGroup(new off(), new WaitCommand(0.3)))))));
 
+
+    joyStick.opButton(7).whileTrue(new InstantCommand(()->climbOut()));
+    joyStick.opButton(7).whileFalse(new InstantCommand(()->climbOff()));
+
+    joyStick.opButton(8).whileTrue(new InstantCommand(()->climbIn()));
+    joyStick.opButton(8).whileFalse(new InstantCommand(()->climbOff()));
+
+
     // joyStick.opButton(4)
     // .onTrue(new InstantCommand(()->arm.setGoal(90)));
 
-    joyStick.opButton(5).onFalse(new InstantCommand(()->intakeoff()));
    // joySticks.opButton(1).onFalse(new InstantCommand(()->shootOff()));
   
 
  
+   //Drive Buttons --------------------------------------------------------------------
 
   
-   // joySticks.driveButton(1).onTrue(new InstantCommand(()->pigeon.zeroYaw()));
+    joyStick.driveButton(1).onTrue(new InstantCommand(()->pigeon.zeroYaw()));
+    //joyStick.driveButton(5).onTrue(new InstantCommand(()->robotDrive()));
   }
 
   
@@ -164,7 +193,7 @@ public void teleOperatedInit(){
 
 
 public void intake(){
-  intakeSpark.set(-0.8);
+  intakeSpark.set(-1);
   leftLaunch.set(-0.5);
   rightLaunch.set(0.5);
 }
@@ -178,9 +207,28 @@ public void shootOff(){
   leftLaunch.set(0);
 }
 
+public void climbOut(){
+  climb.climber1.set(0.5);
+}
+
+public void climbIn(){
+  climb.climber1.set(-0.5);
+}
+
+public void climbOff(){
+  climb.climber1.set(0);
+}
+
+
+
+
 public void teleopPeriodic(){
-  double speedRate = SmartDashboard.getNumber("SpeedRate", 0.1)* MAX_RATE;
-  double turnRate = SmartDashboard.getNumber("TurnRate", .2)* MAX_RATE/R;
+  double speedRate = SmartDashboard.getNumber("SpeedRate", 0.5)* MAX_RATE;
+  double turnRate = SmartDashboard.getNumber("TurnRate", .5)* MAX_RATE/R;
+  double xval = getDriveJoy(0)*speedRate; // TODO: CHECK AXIS
+  double yval = -getDriveJoy(1)*speedRate;
+  double spinval = getDriveJoy(4) * turnRate;
+
    double intake = -4.5;
     double subwoofer = 0;
     double amp = 99;
@@ -201,31 +249,64 @@ public void teleopPeriodic(){
 
     if (flightSensor.getRange()<=150){
     intakeSpark.set(0);
+    opJoy.setRumble(RumbleType.kBothRumble, 0.2);
+    }else{
+      opJoy.setRumble(RumbleType.kBothRumble, 0);
     }
+
+    //joyStick.driveButton(5).whileTrue(swerveDrive.drive(ChassisSpeeds);)
+
+//   if(driveJoy.getLeftBumper()){
+//   swerveDrive.drive(new ChassisSpeeds(xval, yval, spinval));
+//  }else{
+   swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xval, yval, spinval, pigeon.getAngleDeg()));
+
+  }
+
+
+   
+
 
 
  
+    // if(opJoy.getStartButton()){
+    //   climb.climber1.set(0.3);
+    // }else{
+    //   climb.climber1.set(0);
+    // }
+
+    // if(opJoy.getBackButton()){
+    //   climb.climber1.set(-0.3);
+    // }else{
+    //   climb.climber1.set(0);
+    // }
+
 
 
   //joySticks.opButton(1).whileFalse(new InstantCommand(()->shootOff()));
  // joySticks.opButton(2).onFalse(new InstantCommand(()->intakeoff()));
 
 
-  SmartDashboard.putNumber("drivejoyYL", getDriveJoyYL());
-
-  double xval = getDriveJoy(4)*speedRate; // TODO: CHECK AXIS
-  double yval = -getDriveJoy(5)*speedRate;
-  double spinval = getDriveJoy(0) * turnRate;
 
 
-    //  swerveDrive.drive(new ChassisSpeeds(xval, yval, spinval));
-  swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xval, yval, spinval, pigeon.getAngleDeg()));
+
+ 
+
+
+
+ 
 
   
 
     
-}
+
+
+
+
+
   public void roboInit(){
+    arm.enable();
+    arm.setGoal(60);
     
   }
   public void disableArm(){
@@ -296,4 +377,7 @@ public void teleopPeriodic(){
 
 
 
-}
+  }
+
+
+

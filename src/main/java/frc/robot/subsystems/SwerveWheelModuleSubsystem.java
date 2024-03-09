@@ -170,6 +170,11 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
       speedMotor.setIdleMode(IdleMode.kBrake);
   }
 
+  public void swerveCurrentLimit(){
+    speedMotor.setSmartCurrentLimit(40);
+    angleMotor.setSmartCurrentLimit(40);
+  }
+
   private double getSpeedMotorSpeed(){
     return this.speedMotor.getEncoder().getVelocity()*GEAR_RATIO; 
     //TODO: need to convert RPM of motor, to Translational speed of wheel (meters per second)

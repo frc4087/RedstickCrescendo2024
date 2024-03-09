@@ -162,6 +162,13 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         
     }
 
+    public void currentLimit(){
+        backRight.swerveCurrentLimit();
+        backLeft.swerveCurrentLimit();
+        frontRight.swerveCurrentLimit();
+        frontLeft.swerveCurrentLimit();
+    }
+
     public Rotation2d getRobotAngle()
     {
         return pigeon.getAngleDeg();
