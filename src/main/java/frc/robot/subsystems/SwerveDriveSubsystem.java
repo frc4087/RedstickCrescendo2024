@@ -5,6 +5,8 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 //import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -137,6 +139,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Pose Y", odometry.getPoseMeters().getY());
         SmartDashboard.putNumber("Pose Theta", odometry.getPoseMeters().getRotation().getDegrees());
         SmartDashboard.putNumber("Pigeon Readings", pigeon.getAngleDeg().getDegrees());
+
+    
     }
 
     public void stop() {

@@ -28,7 +28,7 @@ public class Arm2 extends ProfiledPIDSubsystem {
             0,
             0.0,
             // The motion profile constraints
-            new TrapezoidProfile.Constraints(200, 200)));
+            new TrapezoidProfile.Constraints(1000, 4000)));
 
       arm_spark2.follow(arm_spark, true);
       //arm_spark.setSmartCurrentLimit(60);

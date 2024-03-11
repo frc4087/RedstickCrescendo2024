@@ -19,6 +19,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -43,6 +44,7 @@ import frc.robot.subsystems.Climber;
 //import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.intakeShoot;
+import frc.robot.subsystems.lilsthing;
 import frc.robot.subsystems.off;
 import frc.robot.subsystems.setSame;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -70,6 +72,7 @@ public class RobotContainer {
   public CANSparkMax leftLaunch = new CANSparkMax(31,MotorType.kBrushless);
   public CANSparkMax intakeSpark = new CANSparkMax(32,MotorType.kBrushless);
   public Climber climb = new Climber();
+  public SlewRateLimiter slew = new SlewRateLimiter(0.9);
 
   
   public double getDriveJoy(int axis){
@@ -130,11 +133,11 @@ public Trajectory trajectory;
     //Arm Code 
     joyStick.opButton(1).onTrue(new InstantCommand(()->{
       arm.enable();
-      arm.setGoal(5);
+      arm.setGoal(3.5);
     }));
     
      joyStick.opButton(2)
-    .onTrue(new InstantCommand(()->arm.setGoal(100)));
+    .onTrue(new InstantCommand(()->arm.setGoal(90)));
   
     // joyStick.opButton(3)
     // .onTrue(new InstantCommand(()->arm.setGoal(0)));
@@ -151,9 +154,14 @@ public Trajectory trajectory;
     joyStick.opButton(5).whileTrue(new InstantCommand(()->intake()));
     joyStick.opButton(5).whileFalse(new InstantCommand(()->intakeoff()));
 
-    joyStick.opButton(6).onTrue(new ParallelRaceGroup(new setSame(), new WaitCommand(0.8).
-    andThen(new ParallelRaceGroup(new intakeShoot(), new WaitCommand(0.5).
+    joyStick.opButton(6).onTrue(new ParallelRaceGroup(new setSame(), new WaitCommand(0.4).
+    andThen(new ParallelRaceGroup(new intakeShoot(), new WaitCommand(0.2).
     andThen(new ParallelRaceGroup(new off(), new WaitCommand(0.3)))))));
+
+    joyStick.opButton(3).whileTrue(new InstantCommand(()->shootOn()));
+    joyStick.opButton(3).whileFalse(new InstantCommand(()->shootOff()));
+
+    //joyStick.opButton(6).onTrue(new InstantCommand(()->lilsthing()));
 
 
     joyStick.opButton(7).whileTrue(new InstantCommand(()->climbOut()));
@@ -173,7 +181,7 @@ public Trajectory trajectory;
    //Drive Buttons --------------------------------------------------------------------
 
   
-    joyStick.driveButton(1).onTrue(new InstantCommand(()->pigeon.zeroYaw()));
+    joyStick.driveButton(2).onTrue(new InstantCommand(()->pigeon.zeroYaw()));
     //joyStick.driveButton(5).onTrue(new InstantCommand(()->robotDrive()));
   }
 
@@ -194,8 +202,8 @@ public void teleOperatedInit(){
 
 public void intake(){
   intakeSpark.set(-1);
-  leftLaunch.set(-0.5);
-  rightLaunch.set(0.5);
+  //leftLaunch.set(-0.5);
+  //rightLaunch.set(0.5);
 }
 
 public void intakeoff(){
@@ -205,6 +213,12 @@ public void intakeoff(){
 public void shootOff(){
   rightLaunch.set(0);
   leftLaunch.set(0);
+}
+
+public void shootOn(){
+  rightLaunch.set(0.5);
+  leftLaunch.set(-0.5);
+  //intakeSpark.set(-1);
 }
 
 public void climbOut(){
@@ -249,6 +263,8 @@ public void teleopPeriodic(){
 
     if (flightSensor.getRange()<=150){
     intakeSpark.set(0);
+    leftLaunch.set(-1);
+    rightLaunch.set(1);
     opJoy.setRumble(RumbleType.kBothRumble, 0.2);
     }else{
       opJoy.setRumble(RumbleType.kBothRumble, 0);
