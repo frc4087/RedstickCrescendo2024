@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
 import com.revrobotics.CANSparkMax;
@@ -183,6 +184,13 @@ public Trajectory trajectory;
   
     joyStick.driveButton(2).onTrue(new InstantCommand(()->pigeon.zeroYaw()));
     //joyStick.driveButton(5).onTrue(new InstantCommand(()->robotDrive()));
+
+    //joyStick.driveButton(1).onTrue(new InstantCommand(()->pigeon.zeroYaw()));
+
+    //this.autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Chooser",autoChooser);
+
+  
   }
 
   
@@ -261,7 +269,7 @@ public void teleopPeriodic(){
     rightLaunch.setIdleMode(IdleMode.kCoast);
     leftLaunch.setIdleMode(IdleMode.kCoast);
 
-    if (flightSensor.getRange()<=150){
+    if (flightSensor.getRange()<=300){
     intakeSpark.set(0);
     leftLaunch.set(-1);
     rightLaunch.set(1);
@@ -307,14 +315,6 @@ public void teleopPeriodic(){
 
 
  
-
-
-
- 
-
-  
-
-    
 
 
 
