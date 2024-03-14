@@ -183,6 +183,8 @@ public class RobotContainer {
       arm.enable();
       arm.setGoal(3.5);
     }));
+
+    joyStick.opButton(4).onTrue(new InstantCommand(()->arm.setGoal(71)));
     
     joyStick.opButton(2).onTrue(new InstantCommand(()->arm.setGoal(90)));
   
