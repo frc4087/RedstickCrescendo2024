@@ -138,7 +138,7 @@ public class RobotContainer {
     leftLaunch.setIdleMode(IdleMode.kBrake);
     rightLaunch.setIdleMode(IdleMode.kBrake);
 
-    intakeSpark.setSmartCurrentLimit(40); 
+    intakeSpark.setSmartCurrentLimit(60); 
     leftLaunch.setSmartCurrentLimit(25);
     rightLaunch.setSmartCurrentLimit(25);
 
@@ -182,6 +182,8 @@ public class RobotContainer {
       arm.enable();
       arm.setGoal(3.5);
     }));
+
+    joyStick.opButton(4).onTrue(new InstantCommand(()->arm.setGoal(71)));
     
     joyStick.opButton(2).onTrue(new InstantCommand(()->arm.setGoal(90)));
   
