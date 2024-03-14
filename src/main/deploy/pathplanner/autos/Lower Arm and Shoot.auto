@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3929974013794195,
-      "y": 5.535354916863679
+      "x": 1.383130458568611,
+      "y": 5.545221859674489
     },
     "rotation": 0
   },
@@ -14,7 +14,20 @@
         {
           "type": "race",
           "data": {
-            "commands": []
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Lower Arm"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 3.0
+                }
+              }
+            ]
           }
         },
         {

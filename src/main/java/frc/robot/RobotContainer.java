@@ -49,6 +49,7 @@ import frc.robot.subsystems.IntakeSlightRaise;
 //import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.intakeShoot;
+import frc.robot.subsystems.lowerArm;
 import frc.robot.subsystems.off;
 import frc.robot.subsystems.setSame;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -81,6 +82,7 @@ public class RobotContainer {
   public IntakeSlightRaise slightRaise = new IntakeSlightRaise(this.arm);
   public intakeShoot intakeShoot = new intakeShoot();
   public FullShoot shoot = new FullShoot();
+  public lowerArm lower = new lowerArm();
 
   double MAX_RATE = 5.5; // m/s
   double R = Math.sqrt(.5);
@@ -132,6 +134,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("SlightRaise", slightRaise);
     NamedCommands.registerCommand("Intake", intakeShoot);
     NamedCommands.registerCommand("Shoot", shoot);
+    NamedCommands.registerCommand("Lower Arm", lower);
 
     autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
     SmartDashboard.putData("Auto Mode", autoChooser);
