@@ -166,7 +166,7 @@ public class RobotContainer {
     joyStick.opButton(5).whileFalse(new InstantCommand(()->intakeoff()));
 
     joyStick.opButton(6).onTrue(new ParallelRaceGroup(new setSame(), new WaitCommand(0.4).
-    andThen(new ParallelRaceGroup(new intakeShoot(), new WaitCommand(0.2).
+    andThen(new ParallelRaceGroup(new intakeShoot(), new WaitCommand(0.4).
     andThen(new ParallelRaceGroup(new off(), new WaitCommand(0.3)))))));
 
     joyStick.opButton(3).whileTrue(new InstantCommand(()->shootOn()));
