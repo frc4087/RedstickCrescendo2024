@@ -6,6 +6,9 @@ package frc.robot.subsystems;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 //import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -20,6 +23,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.DriverStation;
 //import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 //import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
@@ -81,14 +85,27 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         odometry = new SwerveDriveOdometry
                     (kinematics, 
 
-                    pigeon.getAngleRad(), 
+                    pigeon.getAngleDeg(), 
 
                     new SwerveModulePosition[] {
                         backRight.getSwerveModulePosition(), 
                         backLeft.getSwerveModulePosition(),
                         frontRight.getSwerveModulePosition(),
                         frontLeft.getSwerveModulePosition()});
-                        
+                   
+           AutoBuilder.configureHolonomic(
+            this::getRobotPose,
+            this::resetPose,
+            this::getChassisSpeeds,
+            this::drive,
+            new HolonomicPathFollowerConfig(
+                new PIDConstants(5,0,0),
+                new PIDConstants(5,0,0),
+                        4.5,
+                        0.4085, new ReplanningConfig()), 
+            this::mirrorAuto,
+            this
+        );
         
     }
     //This drive sets new speeds from the controller
@@ -140,7 +157,20 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Pose Theta", odometry.getPoseMeters().getRotation().getDegrees());
         SmartDashboard.putNumber("Pigeon Readings", pigeon.getAngleDeg().getDegrees());
 
-    
+     
+    }
+
+    // public void resetPose2(Pose2d pose) {
+    //     odometry.resetPosition(pigeon.getRotation2d(), getPositions(), pose);
+    //   }
+
+    public boolean mirrorAuto() {
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+        }
+        return false;
+
     }
 
     public void stop() {
@@ -189,6 +219,16 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                                 new Pose2d(0, 0, pigeon.getAngleRad()));
     }
 
+    public void resetPose(Pose2d pose) {
+        odometry.resetPosition(pigeon.getAngleDeg()
+        , new SwerveModulePosition[]{
+            backRight.getSwerveModulePosition(),
+            backLeft.getSwerveModulePosition(),
+            frontRight.getSwerveModulePosition(),
+            frontLeft.getSwerveModulePosition(),}, 
+        pose);
+    }
+
     public void setPose(double x, double y, double heading)
     {
         odometry.resetPosition(pigeon.getAngleRad(), 
@@ -212,6 +252,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public Supplier<Pose2d> getRobotPoseSupplier()
     {
         return odometry::getPoseMeters;
+    }
+
+    public ChassisSpeeds getChassisSpeeds(){
+        return this.speeds;
     }
 }
 

@@ -37,7 +37,7 @@ public class Arm2 extends ProfiledPIDSubsystem {
       arm_spark2.setIdleMode(IdleMode.kBrake);
   }
 
-  
+
 
   @Override
   public void useOutput(double output, TrapezoidProfile.State setpoint) {
@@ -53,6 +53,12 @@ public class Arm2 extends ProfiledPIDSubsystem {
 
     // Use the output (and optionally the setpoint) here
   }
+
+  // public boolean atGoal(){
+  //   return 
+  
+  
+  // }
 
   @Override
   public double getMeasurement() {
