@@ -17,7 +17,7 @@ public class lowerArm extends Command {
   @Override
   public void initialize() {
     Robot.m_robotContainer.arm.enable();
-    Robot.m_robotContainer.arm.setGoal(7);
+    Robot.m_robotContainer.arm.setGoal(5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

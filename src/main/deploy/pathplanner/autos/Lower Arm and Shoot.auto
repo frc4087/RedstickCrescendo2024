@@ -16,15 +16,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "Lower Arm"
-                }
-              },
-              {
                 "type": "wait",
                 "data": {
                   "waitTime": 3.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Lower Arm"
                 }
               }
             ]
@@ -35,15 +35,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "Shoot"
-                }
-              },
-              {
                 "type": "wait",
                 "data": {
                   "waitTime": 3.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shoot"
                 }
               }
             ]
