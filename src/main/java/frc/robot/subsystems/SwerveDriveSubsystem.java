@@ -145,7 +145,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
         setSwerveModuleStates(moduleStates);
 
-        odometry.update(pigeon.getAngleRad(), 
+        odometry.update(pigeon.getAngleDeg(), 
                         new SwerveModulePosition[] {
                             backRight.getSwerveModulePosition(), 
                             backLeft.getSwerveModulePosition(),
@@ -210,7 +210,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     public void resetPose()
     {
-        odometry.resetPosition(pigeon.getAngleRad(), 
+        odometry.resetPosition(pigeon.getAngleDeg(), 
                                 new SwerveModulePosition[] {
                                     backRight.getSwerveModulePosition(), 
                                     backLeft.getSwerveModulePosition(),
@@ -231,7 +231,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     public void setPose(double x, double y, double heading)
     {
-        odometry.resetPosition(pigeon.getAngleRad(), 
+        odometry.resetPosition(pigeon.getAngleDeg(), 
                                 new SwerveModulePosition[] {
                                     backRight.getSwerveModulePosition(), 
                                     backLeft.getSwerveModulePosition(),
