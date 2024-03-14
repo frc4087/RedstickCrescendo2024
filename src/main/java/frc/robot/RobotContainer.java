@@ -44,6 +44,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Arm2;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.FullShoot;
 import frc.robot.subsystems.IntakeSlightRaise;
 //import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
@@ -79,7 +80,7 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
   public IntakeSlightRaise slightRaise = new IntakeSlightRaise(this.arm);
   public intakeShoot intakeShoot = new intakeShoot();
-  public setSame shoot = new setSame();
+  public FullShoot shoot = new FullShoot();
 
   double MAX_RATE = 5.5; // m/s
   double R = Math.sqrt(.5);
