@@ -69,6 +69,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         SendableRegistry.addLW(this, "Swerve Drive Subsystem");
 
+
         // angleController = new PIDController(.3, 0, 0); //this pid controller is for controlling total robot angle
         //angleController.enableContinuousInput(0, Math.PI * 2); 
         //angleController.setSetpoint(0); 
@@ -132,10 +133,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Back right module state
         SwerveModuleState frontLeftState = states[3];
         
-        backLeft.drive(backLeftState.speedMetersPerSecond, backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
-        backRight.drive(backRightState.speedMetersPerSecond, backRightState.angle.getDegrees()); // removed negative sign
-        frontLeft.drive(frontLeftState.speedMetersPerSecond, frontLeftState.angle.getDegrees());
-        frontRight.drive(frontRightState.speedMetersPerSecond, frontRightState.angle.getDegrees()); // removed negative sign 12/29/23
+        backLeft.drive(backLeftState.speedMetersPerSecond, 0);//backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
+        backRight.drive(backRightState.speedMetersPerSecond, 0);//backRightState.angle.getDegrees()); // removed negative sign
+        frontLeft.drive(frontLeftState.speedMetersPerSecond, 0);//frontLeftState.angle.getDegrees());
+        frontRight.drive(frontRightState.speedMetersPerSecond, 0); // frontRightState.angle.getDegrees()); // removed negative sign 12/29/23
         
     }
 
@@ -257,5 +258,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public ChassisSpeeds getChassisSpeeds(){
         return this.speeds;
     }
+
+ 
 }
 

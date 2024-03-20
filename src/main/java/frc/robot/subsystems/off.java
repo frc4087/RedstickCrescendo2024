@@ -22,6 +22,7 @@ public class off extends Command {
   public void execute() {
     Robot.m_robotContainer.rightLaunch.set(0);
     Robot.m_robotContainer.leftLaunch.set(0);
+    Robot.m_robotContainer.intakeSpark.set(0);
   }
 
   // Called once the command ends or is interrupted.

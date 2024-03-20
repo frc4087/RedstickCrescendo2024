@@ -20,7 +20,7 @@ public class FullShoot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Robot.m_robotContainer.intakeSpark.set(-0.8);
+    Robot.m_robotContainer.intakeSpark.set(-1);
     Robot.m_robotContainer.leftLaunch.set(-1);
     Robot.m_robotContainer.rightLaunch.set(1);
   }
@@ -36,6 +36,6 @@ public class FullShoot extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

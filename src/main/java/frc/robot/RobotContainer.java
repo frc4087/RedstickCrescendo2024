@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
@@ -48,7 +49,9 @@ import frc.robot.subsystems.FullShoot;
 import frc.robot.subsystems.IntakeSlightRaise;
 //import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
+import frc.robot.subsystems.armLob;
 import frc.robot.subsystems.intakeShoot;
+import frc.robot.subsystems.lowerArm;
 import frc.robot.subsystems.off;
 import frc.robot.subsystems.setSame;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -81,6 +84,10 @@ public class RobotContainer {
   public IntakeSlightRaise slightRaise = new IntakeSlightRaise(this.arm);
   public intakeShoot intakeShoot = new intakeShoot();
   public FullShoot shoot = new FullShoot();
+  public lowerArm lowerarm = new lowerArm();
+  public off off = new off();
+  public setSame setSame = new setSame();
+  public armLob lob = new armLob();
 
   double MAX_RATE = 5.5; // m/s
   
@@ -117,7 +124,18 @@ public class RobotContainer {
     double raw = getDriveJoy(5);
     return raw;
   }
+  public void turnMotorOff(){
+    off.execute();
+  }
 
+
+  public boolean ifHasNote(){
+    if(flightSensor.getRange()<300){
+      return true;
+    }else{
+      return false;
+    }
+  }
 
 
 
@@ -132,7 +150,12 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("SlightRaise", slightRaise);
     NamedCommands.registerCommand("Intake", intakeShoot);
-    NamedCommands.registerCommand("Shoot", shoot);
+    NamedCommands.registerCommand("Shoot", setSame);
+    NamedCommands.registerCommand("Lower Arm", lowerarm);
+    NamedCommands.registerCommand("lob", lob);
+
+   // NamedCommands.registerCommand("intakeShoot", in)
+    
 
     autoChooser = AutoBuilder.buildAutoChooser(); // Default auto will be `Commands.none()`
     SmartDashboard.putData("Auto Mode", autoChooser);
@@ -205,12 +228,18 @@ public class RobotContainer {
 
   
 
-
 public void teleOperatedInit(){
 
 }
 
 
+
+public void roboPeriodic(){
+  SmartDashboard.putNumber("FR distance", swerveDrive.frontRight.getSpeedMotorPosition());
+  SmartDashboard.putNumber("BR distance", swerveDrive.backRight.getSpeedMotorPosition());
+  SmartDashboard.putNumber("FL distance", swerveDrive.frontLeft.getSpeedMotorPosition());
+  SmartDashboard.putNumber("BL distance", swerveDrive.backLeft.getSpeedMotorPosition());
+}
 
 
 
@@ -251,6 +280,11 @@ public void climbOff(){
 public void teleopPeriodic(){
   double speedRate = SmartDashboard.getNumber("SpeedRate", 1)* MAX_RATE;
   double turnRate = SmartDashboard.getNumber("TurnRate", 0.75)* MAX_RATE/R;
+   
+ 
+
+
+
 
   double xval = getDriveJoy(0)*speedRate; // TODO: CHECK AXIS
   double yval = -getDriveJoy(1)*speedRate;

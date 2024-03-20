@@ -6,39 +6,35 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.RobotContainer;
 
-public class intakeShoot extends Command {
-  /** Creates a new intakeShoot. */
-  public intakeShoot() {
+public class armLob extends Command {
+  /** Creates a new armLob. */
+  public armLob() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    Robot.m_robotContainer.arm.enable();
+    Robot.m_robotContainer.arm.setGoal(45);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    Robot.m_robotContainer.intakeSpark.set(-1);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Robot.m_robotContainer.intakeSpark.set(0);
+    Robot.m_robotContainer.arm.disable();
   }
+
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
 
-    if(Robot.m_robotContainer.flightSensor.getRange()<300){
-        return true;
-    }else{
-      return false;
-    }
-  
+    return false;
   }
 }

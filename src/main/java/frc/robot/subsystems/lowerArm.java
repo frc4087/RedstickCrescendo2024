@@ -35,10 +35,11 @@ public class lowerArm extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Math.abs(5 - Robot.m_robotContainer.arm.getMeasurement()) < 1.0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+    return false;
+  //   if (Math.abs(5 - Robot.m_robotContainer.arm.getMeasurement()) < 1.0) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+   }
 }

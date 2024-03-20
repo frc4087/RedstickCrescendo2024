@@ -180,7 +180,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     //TODO: need to convert RPM of motor, to Translational speed of wheel (meters per second)
   }
 
-  private double getSpeedMotorPosition(){
+  public double getSpeedMotorPosition(){
     return this.speedMotor.getEncoder().getPosition()*GEAR_RATIO;
   }
 
