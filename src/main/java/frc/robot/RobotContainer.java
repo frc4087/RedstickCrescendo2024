@@ -153,6 +153,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shoot", setSame);
     NamedCommands.registerCommand("Lower Arm", lowerarm);
     NamedCommands.registerCommand("lob", lob);
+    NamedCommands.registerCommand("Full Shoot", shoot);
 
    // NamedCommands.registerCommand("intakeShoot", in)
     

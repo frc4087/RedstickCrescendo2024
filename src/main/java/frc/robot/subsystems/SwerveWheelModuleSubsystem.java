@@ -26,7 +26,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
   double P = 0.00675;//0.000072;//0.000081;
   double I = 0.00001;//0.000007;
   double D = 0;//0.0000065;
-  double GEAR_RATIO = 2;
+  double GEAR_RATIO = 0.148; //6.75 to 1 whatever that means
   //hard code in the actual values once we find them off of smartdashboard
 
   private CANSparkMax angleMotor;
@@ -97,7 +97,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
   public void setSpeed(double speed)
   {
-      speedMotor.set(speed/5.5);
+      speedMotor.set(speed/5.5); //why 5.5? 
   }
 
   
@@ -140,10 +140,11 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
   public double getDistance() {
       if (motorName.equals("BR") || motorName.equals("FR")) {
-          return -(speedMotor.getEncoder().getPosition()* Constants.WHEEL_CIRCUMFERENCE)/(2048 * Constants.L2_RATIO);
+          return -(speedMotor.getEncoder().getPosition()* Constants.WHEEL_CIRCUMFERENCE)/(2048 * Constants.L2_RATIO); 
       }
       return (speedMotor.getEncoder().getPosition() * Constants.WHEEL_CIRCUMFERENCE)/(2048 * Constants.L2_RATIO);
-  }
+      //2048 value is from falcon encoder distance per pulse
+    }
 
   public void stop() {
       speedMotor.set(0);
@@ -181,7 +182,8 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
   }
 
   public double getSpeedMotorPosition(){
-    return this.speedMotor.getEncoder().getPosition()*GEAR_RATIO;
+    return this.speedMotor.getEncoder().getPosition()*GEAR_RATIO*Constants.WHEEL_CIRCUMFERENCE; 
+    //this didn't work 
   }
 
 

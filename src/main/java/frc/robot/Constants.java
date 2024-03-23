@@ -12,7 +12,7 @@ public class Constants {
     public static final double THROTTLE_MAX = 1.0;
     public static final double MAX_ANGULAR_SPEED_RADIANS = Math.PI; //change 
     public static final double MAX_ANGULAR_SPEED_RADIANS_SQ = Math.PI; //change 
-    public static final double GEAR_RATIO = 2;
+    public static final double GEAR_RATIO = 0.148;
     //DriveBase Constants - Unchecked 
     public static final double ksVolts = 0.18531,//0.65634, 
                                 kvVoltSecondsPerMeter = 1.0502, //2.6376,  //0.1106, 

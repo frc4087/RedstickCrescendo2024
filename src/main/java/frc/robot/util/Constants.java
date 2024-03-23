@@ -29,7 +29,7 @@ public class Constants {
     public static final double L2_RATIO = 6.75;
     public static final double L3_RATIO = 6.12;
     public static final double STEER_RATIO = 150.0/7.0;
-    public static final double WHEEL_CIRCUMFERENCE = 0.31918581324; 
+    public static final double WHEEL_CIRCUMFERENCE = 12.56; 
 
    
     public static final double ELEVATOR_MIN = 0.005;

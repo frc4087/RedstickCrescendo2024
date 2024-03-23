@@ -100,6 +100,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             this::getChassisSpeeds,
             this::drive,
             new HolonomicPathFollowerConfig(
+                //These PID constants aren't tuned
                 new PIDConstants(5,0,0),
                 new PIDConstants(5,0,0),
                         4.5,
@@ -133,6 +134,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Back right module state
         SwerveModuleState frontLeftState = states[3];
         
+
+        //put this back in for normal driving
         backLeft.drive(backLeftState.speedMetersPerSecond, 0);//backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
         backRight.drive(backRightState.speedMetersPerSecond, 0);//backRightState.angle.getDegrees()); // removed negative sign
         frontLeft.drive(frontLeftState.speedMetersPerSecond, 0);//frontLeftState.angle.getDegrees());
