@@ -43,17 +43,17 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.FullShoot;
+import frc.robot.commands.IntakeSlightRaise;
+import frc.robot.commands.armLob;
+import frc.robot.commands.intakeShoot;
+import frc.robot.commands.lowerArm;
+import frc.robot.commands.off;
+import frc.robot.commands.setSame;
 import frc.robot.subsystems.Arm2;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.FullShoot;
-import frc.robot.subsystems.IntakeSlightRaise;
 //import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
-import frc.robot.subsystems.armLob;
-import frc.robot.subsystems.intakeShoot;
-import frc.robot.subsystems.lowerArm;
-import frc.robot.subsystems.off;
-import frc.robot.subsystems.setSame;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 
@@ -168,7 +168,7 @@ public class RobotContainer {
     leftLaunch.setSmartCurrentLimit(25);
     rightLaunch.setSmartCurrentLimit(25);
 
-    swerveDrive.brake();
+    swerveDrive.coast();
     swerveDrive.currentLimit();
     flightSensor.setRangeOfInterest(8, 8, 12, 12);
 
@@ -240,6 +240,9 @@ public void roboPeriodic(){
   SmartDashboard.putNumber("BR distance", swerveDrive.backRight.getSpeedMotorPosition());
   SmartDashboard.putNumber("FL distance", swerveDrive.frontLeft.getSpeedMotorPosition());
   SmartDashboard.putNumber("BL distance", swerveDrive.backLeft.getSpeedMotorPosition());
+  SmartDashboard.putData("arm",arm);
+  SmartDashboard.putData("swerve", swerveDrive);
+  SmartDashboard.putData("Climber",climb);
 }
 
 

@@ -86,7 +86,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         odometry = new SwerveDriveOdometry
                     (kinematics, 
 
-                    pigeon.getAngleDeg(), 
+                    pigeon.getAngleDeg(), //May need to change to Rads 
 
                     new SwerveModulePosition[] {
                         backRight.getSwerveModulePosition(), 
@@ -145,6 +145,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     // @Override
     public void periodic() {
+        backRight.periodic();
+        backLeft.periodic();
+        frontRight.periodic();
+        frontLeft.periodic();
+        
         // Convert to module states
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
         setSwerveModuleStates(moduleStates);

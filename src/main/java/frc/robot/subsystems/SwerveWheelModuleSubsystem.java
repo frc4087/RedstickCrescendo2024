@@ -17,7 +17,10 @@ import frc.robot.util.MathUtil;
 import frc.robot.RobotContainer;
 import frc.robot.util.Constants;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -37,6 +40,8 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
   //private boolean calibrateMode;
   private double encoderOffset;
   private String motorName;
+  private CANcoderConfiguration angleEncoderConfig;
+  private int counter = 0;
   //private SimpleWidget speedLim;
 
   public SwerveWheelModuleSubsystem(int angleMotorChannel, int speedMotorChannel, int angleEncoderChannel,
@@ -53,14 +58,19 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
       // the motors more aggressive to changing to angles.
       
       
-
       //angleEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
 
       // pidController.setTolerance(20); //sets tolerance, shouldn't be needed.
 
-      pidController.enableContinuousInput(0, 360); // This makes the PID controller
+      pidController.enableContinuousInput(0, 360);// This makes the PID controller
       // understand the fact that for
       // our setup, 360 degrees is the same as 0 since the wheel loops.
+        
+      angleEncoderConfig = new CANcoderConfiguration();
+      angleEncoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+      angleEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+      angleEncoder.getConfigurator().apply(angleEncoderConfig);
+      //CANcoders may report 
 
       SendableRegistry.addChild(this, angleMotor);
       SendableRegistry.addChild(this, speedMotor);
@@ -78,6 +88,8 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
       //.withWidget(BuiltInWidgets.kNumberSlider);;
       
       // resetSensor();
+
+
   }
   public void setAngle(double angle, double currentEncoderValue)
   {
@@ -105,7 +117,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
       double currentEncoderValue = getPosition();
       
       // SmartDashboard.putNumber("Distance " + motorName, getDistance());
-      SmartDashboard.putNumber("Rotation " + motorName, getPositionRad());
+      SmartDashboard.putNumber("Rotation " + motorName, getPosition());
       SmartDashboard.putNumber("angle reading", angle);
       SmartDashboard.putNumber("Cyclical Distance", MathUtil.getCyclicalDistance(currentEncoderValue, angle, 360));
    
@@ -134,8 +146,12 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
        return MathUtil.mod(angleEncoder.getAbsolutePosition().refresh().getValue()*360 - encoderOffset, 360);
     }
 
-  public double getPositionRad() {
-      return MathUtil.mod(angleEncoder.getAbsolutePosition().refresh().getValue()*2*Math.PI - encoderOffset, 360) * Math.PI / 180;
+  // public double getPositionRad() {
+  //     return MathUtil.mod(angleEncoder.getAbsolutePosition().refresh().getValue()*2*Math.PI - encoderOffset, 360) * Math.PI / 180;
+  // }
+  
+  public double getPositionRad(){
+    return getPosition()*Constants.degToRad;
   }
 
   public double getDistance() {
@@ -154,12 +170,19 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
       //calibrateMode = calibrateState.getEntry().getBoolean(false);
+      SmartDashboard.putNumber("speed Encoder " + motorName, speedMotor.getEncoder().getPosition());
+      SmartDashboard.putNumber("angle Encoder " + motorName, angleMotor.getEncoder().getPosition());
+      counter++;
+      SmartDashboard.putNumber("counter", counter);
+      
+
       P = SmartDashboard.getNumber("P", P);
       I = SmartDashboard.getNumber("I", I);
       D = SmartDashboard.getNumber("D", D);
       pidController.setPID(P, I, D);
     
-      SmartDashboard.putNumber("Encoder " + motorName, getPosition());
+      SmartDashboard.putNumber("Encoder (Calculated) " + motorName, getPosition());
+      SmartDashboard.putNumber("raw Cancoder "+ motorName, angleEncoder.getAbsolutePosition().refresh().getValueAsDouble());
 
   }
 
