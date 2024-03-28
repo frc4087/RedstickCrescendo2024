@@ -42,12 +42,9 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.intakeShoot;
 import frc.robot.subsystems.off;
-import frc.robot.subsystems.PhotonCameras;
 import frc.robot.subsystems.setSame;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import frc.robot.subsystems.PhotonCameras;
-import frc.robot.subsystems.PoseEstimation;
 
 
 /**
@@ -71,8 +68,7 @@ public class RobotContainer {
   public CANSparkMax leftLaunch = new CANSparkMax(31,MotorType.kBrushless);
   public CANSparkMax intakeSpark = new CANSparkMax(32,MotorType.kBrushless);
   public final PhotonCameras mLimelight = new PhotonCameras();
-  private final PoseEstimation mPoseEstimator = new PoseEstimation(mLimelight, swerveDrive);
-
+ 
   
   //public LimeLightSubsystem limeLightSubsystem;
   //private NewAutoAim lineUpClose, lineUpMedium, lineUpFar, lineUpXtra;
@@ -153,10 +149,7 @@ public Trajectory trajectory;
     return mLimelight;
   }
 
-  public PoseEstimation getPoseEstimator() {
-    return mPoseEstimator;
-  }
-  
+
 double MAX_RATE = 5.5; // m/s
 double R = Math.sqrt(.5);
 
