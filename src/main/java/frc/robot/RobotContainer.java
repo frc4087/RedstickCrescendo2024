@@ -168,7 +168,7 @@ public class RobotContainer {
     leftLaunch.setSmartCurrentLimit(25);
     rightLaunch.setSmartCurrentLimit(25);
 
-    swerveDrive.coast();
+    swerveDrive.brake();
     swerveDrive.currentLimit();
     flightSensor.setRangeOfInterest(8, 8, 12, 12);
 

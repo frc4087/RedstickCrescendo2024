@@ -8,6 +8,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.off;
 
 /**
@@ -66,6 +67,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    new InstantCommand(()->m_robotContainer.swerveDrive.resetPose());
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
    
     // schedule the autonomous command (example)

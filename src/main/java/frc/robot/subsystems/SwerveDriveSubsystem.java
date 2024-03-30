@@ -101,9 +101,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             this::drive,
             new HolonomicPathFollowerConfig(
                 //These PID constants aren't tuned
-                new PIDConstants(5,0,0),
-                new PIDConstants(5,0,0),
-                        4.5,
+                new PIDConstants(3.8,0,0),
+                new PIDConstants(3.8,0,0),
+                        4.08,
                         0.4085, new ReplanningConfig()), 
             this::mirrorAuto,
             this
@@ -136,10 +136,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         
 
         //put this back in for normal driving
-        backLeft.drive(backLeftState.speedMetersPerSecond, 0);//backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
-        backRight.drive(backRightState.speedMetersPerSecond, 0);//backRightState.angle.getDegrees()); // removed negative sign
-        frontLeft.drive(frontLeftState.speedMetersPerSecond, 0);//frontLeftState.angle.getDegrees());
-        frontRight.drive(frontRightState.speedMetersPerSecond, 0); // frontRightState.angle.getDegrees()); // removed negative sign 12/29/23
+        backLeft.drive(backLeftState.speedMetersPerSecond, backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
+        backRight.drive(backRightState.speedMetersPerSecond, backRightState.angle.getDegrees()); // removed negative sign
+        frontLeft.drive(frontLeftState.speedMetersPerSecond, frontLeftState.angle.getDegrees());
+        frontRight.drive(frontRightState.speedMetersPerSecond, frontRightState.angle.getDegrees()); // removed negative sign 12/29/23
         
     }
 
@@ -225,7 +225,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                                     backLeft.getSwerveModulePosition(),
                                     frontRight.getSwerveModulePosition(),
                                     frontLeft.getSwerveModulePosition()},
-                                new Pose2d(0, 0, pigeon.getAngleRad()));
+                                new Pose2d(0, 0, pigeon.getAngleDeg()));
     }
 
     public void resetPose(Pose2d pose) {
